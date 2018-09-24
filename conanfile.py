@@ -21,6 +21,9 @@ class LibFlannConan(ConanFile):
     build_subfolder = "build_subfolder"
     short_paths = False
 
+    def configure(self):
+        del self.settings.compiler.libcxx
+
     def source(self):
         tools.get("https://github.com/mariusmuja/flann/archive/{0}.tar.gz".format(self.version))
         os.rename("flann-" + self.version, self.source_subfolder)
