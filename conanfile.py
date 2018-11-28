@@ -14,7 +14,7 @@ class LibFlannConan(ConanFile):
         "patches/CMakeProjectWrapper.txt",
         "patches/flann_cmake_311.diff"
     ]
-    url = "https://gitlab.lan.local/conan/conan-flann"
+    url = "https://git.ircad.fr/conan/conan-flann"
     license="BSD License"
     description = "Fast Library for Approximate Nearest Neighbors."
     source_subfolder = "source_subfolder"
