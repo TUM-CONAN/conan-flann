@@ -5,7 +5,9 @@ import shutil
 
 class LibFlannConan(ConanFile):
     name = "flann"
-    version = "1.9.1"
+    package_revision = "-r1"
+    upstream_version = "1.9.1"
+    version = "{0}{1}".format(upstream_version, package_revision)
     generators = "cmake"
     settings = "os", "arch", "compiler", "build_type"
     options = {"shared": [True, False]}
@@ -25,8 +27,8 @@ class LibFlannConan(ConanFile):
         del self.settings.compiler.libcxx
 
     def source(self):
-        tools.get("https://github.com/mariusmuja/flann/archive/{0}.tar.gz".format(self.version))
-        os.rename("flann-" + self.version, self.source_subfolder)
+        tools.get("https://github.com/mariusmuja/flann/archive/{0}.tar.gz".format(self.upstream_version))
+        os.rename("flann-" + self.upstream_version, self.source_subfolder)
 
     def build(self):
         flann_source_dir = os.path.join(self.source_folder, self.source_subfolder)
