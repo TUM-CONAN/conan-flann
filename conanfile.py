@@ -5,14 +5,18 @@ import shutil
 
 class LibFlannConan(ConanFile):
     name = "flann"
-    version = "1.9.1"
+    package_revision = "-r1"
+    upstream_version = "1.9.1"
+    version = "{0}{1}".format(upstream_version, package_revision)
+
     generators = "cmake"
     settings = "os", "arch", "compiler", "build_type"
     options = {"shared": [True, False]}
     default_options = "shared=True"
     exports = [
         "patches/CMakeProjectWrapper.txt",
-        "patches/flann_cmake_311.diff"
+        "patches/flann_cmake_311.diff",
+        "patches/FindFLANN.cmake"
     ]
     url = "https://git.ircad.fr/conan/conan-flann"
     license="BSD License"
@@ -25,8 +29,8 @@ class LibFlannConan(ConanFile):
         del self.settings.compiler.libcxx
 
     def source(self):
-        tools.get("https://github.com/mariusmuja/flann/archive/{0}.tar.gz".format(self.version))
-        os.rename("flann-" + self.version, self.source_subfolder)
+        tools.get("https://github.com/mariusmuja/flann/archive/{0}.tar.gz".format(self.upstream_version))
+        os.rename("flann-" + self.upstream_version, self.source_subfolder)
 
     def build(self):
         flann_source_dir = os.path.join(self.source_folder, self.source_subfolder)
@@ -45,6 +49,9 @@ class LibFlannConan(ConanFile):
         cmake.configure(build_folder=self.build_subfolder)
         cmake.build()
         cmake.install()
+
+    def package(self):
+        self.copy("patches/FindFLANN.cmake", src=".", dst=".", keep_path=False)
 
     def package_info(self):
         self.cpp_info.libs = tools.collect_libs(self)
