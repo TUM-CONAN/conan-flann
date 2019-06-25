@@ -5,7 +5,7 @@ import shutil
 
 class LibFlannConan(ConanFile):
     name = "flann"
-    package_revision = "-r1"
+    package_revision = "-r2"
     upstream_version = "1.9.1"
     version = "{0}{1}".format(upstream_version, package_revision)
 
@@ -28,16 +28,27 @@ class LibFlannConan(ConanFile):
     def configure(self):
         del self.settings.compiler.libcxx
 
+    def requirements(self):
+        self.requires("common/1.0.0@sight/stable")
+
     def source(self):
         tools.get("https://github.com/mariusmuja/flann/archive/{0}.tar.gz".format(self.upstream_version))
         os.rename("flann-" + self.upstream_version, self.source_subfolder)
 
     def build(self):
+        # Import common flags and defines
+        import common
+
         flann_source_dir = os.path.join(self.source_folder, self.source_subfolder)
         shutil.move("patches/CMakeProjectWrapper.txt", "CMakeLists.txt")
         tools.patch(flann_source_dir, "patches/flann_cmake_311.diff")
 
         cmake = CMake(self)
+        
+        # Set common flags
+        cmake.definitions["SIGHT_CMAKE_C_FLAGS"] = common.get_c_flags()
+        cmake.definitions["SIGHT_CMAKE_CXX_FLAGS"] = common.get_cxx_flags()
+        
         cmake.definitions["BUILD_EXAMPLES"] = "OFF"
         cmake.definitions["BUILD_DOC"] = "OFF"
         cmake.definitions["BUILD_TESTS"] = "OFF"
