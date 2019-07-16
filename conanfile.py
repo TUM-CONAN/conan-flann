@@ -18,7 +18,7 @@ class LibFlannConan(ConanFile):
         "patches/flann_cmake_311.diff",
         "patches/FindFLANN.cmake"
     ]
-    url = "https://git.ircad.fr/conan/conan-flann"
+    url = "https://github.com/ulricheck/conan-flann"
     license="BSD License"
     description = "Fast Library for Approximate Nearest Neighbors."
     source_subfolder = "source_subfolder"
@@ -29,7 +29,7 @@ class LibFlannConan(ConanFile):
         del self.settings.compiler.libcxx
 
     def requirements(self):
-        self.requires("common/1.0.0@sight/stable")
+        self.requires("ircad_common/1.0.0@camposs/stable")
 
     def source(self):
         tools.get("https://github.com/mariusmuja/flann/archive/{0}.tar.gz".format(self.upstream_version))
