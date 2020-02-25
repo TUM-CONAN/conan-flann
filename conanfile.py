@@ -5,7 +5,7 @@ import shutil
 
 class LibFlannConan(ConanFile):
     name = "flann"
-    package_revision = "-r2"
+    package_revision = "-r5"
     upstream_version = "1.9.1"
     version = "{0}{1}".format(upstream_version, package_revision)
 
@@ -16,6 +16,7 @@ class LibFlannConan(ConanFile):
     exports = [
         "patches/CMakeProjectWrapper.txt",
         "patches/flann_cmake_311.diff",
+        "patches/c++17_support.diff",
         "patches/FindFLANN.cmake"
     ]
     url = "https://github.com/ulricheck/conan-flann"
@@ -36,6 +37,9 @@ class LibFlannConan(ConanFile):
         os.rename("flann-" + self.upstream_version, self.source_subfolder)
 
     def build(self):
+        flann_source_dir = os.path.join(self.source_folder, self.source_subfolder)
+        tools.patch(flann_source_dir, "patches/flann_cmake_311.diff")
+        tools.patch(flann_source_dir, "patches/c++17_support.diff")
         # Import common flags and defines
         import common
 
