@@ -5,7 +5,7 @@ import shutil
 
 class LibFlannConan(ConanFile):
     name = "flann"
-    package_revision = "-r5"
+    package_revision = "-r6"
     upstream_version = "1.9.1"
     version = "{0}{1}".format(upstream_version, package_revision)
 
@@ -30,7 +30,7 @@ class LibFlannConan(ConanFile):
         del self.settings.compiler.libcxx
 
     def requirements(self):
-        self.requires("ircad_common/1.0.2@camposs/stable")
+        self.requires("ircad_common/1.0.3@camposs/stable")
 
     def source(self):
         tools.get("https://github.com/mariusmuja/flann/archive/{0}.tar.gz".format(self.upstream_version))
