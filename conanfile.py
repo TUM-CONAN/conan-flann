@@ -4,8 +4,10 @@ import os
 import shutil
 
 class LibFlannConan(ConanFile):
+    python_requires = "camp_common/[>=0.1]@camposs/stable"
+
     name = "flann"
-    package_revision = "-r6"
+    package_revision = "-r7"
     upstream_version = "1.9.1"
     version = "{0}{1}".format(upstream_version, package_revision)
 
@@ -29,9 +31,6 @@ class LibFlannConan(ConanFile):
     def configure(self):
         del self.settings.compiler.libcxx
 
-    def requirements(self):
-        self.requires("ircad_common/1.0.3@camposs/stable")
-
     def source(self):
         tools.get("https://github.com/mariusmuja/flann/archive/{0}.tar.gz".format(self.upstream_version))
         os.rename("flann-" + self.upstream_version, self.source_subfolder)
@@ -41,7 +40,7 @@ class LibFlannConan(ConanFile):
         tools.patch(flann_source_dir, "patches/flann_cmake_311.diff")
         tools.patch(flann_source_dir, "patches/c++17_support.diff")
         # Import common flags and defines
-        import common
+        common = self.python_requires["camp_common"].module
 
         flann_source_dir = os.path.join(self.source_folder, self.source_subfolder)
         shutil.move("patches/CMakeProjectWrapper.txt", "CMakeLists.txt")
